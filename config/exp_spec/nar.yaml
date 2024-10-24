@@ -1,0 +1,87 @@
+train_name: nar_train
+train_id: '00'
+mode: restart
+use_deepspeed: true
+seed: 108
+
+module_cfg:
+  name: nar
+
+model_cfg:
+  codec_model_path: null
+
+train_dataset_cfg:
+  commonvoice:
+    audio_root: null
+    audio_file: null
+  # [Optional] Add more datasets
+  # wenetspeech:
+  #   audio_root: null
+  #   audio_file: null
+  # librilight:
+  #   audio_root: null
+  #   audio_file: null
+
+
+val_dataset_cfg:
+  commonvoice:
+    audio_root: null
+    audio_file: null
+
+loader_cfg:
+  batch_size: 1
+  val_batch_size: 10
+  test_batch_size: 10
+  num_worker: 2
+
+
+optim_cfg:
+  learning_rate: 1.0e-5
+  weight_decay: 0.1
+  adam_epsilon: 1.0e-6
+  adam_betas: [0.9, 0.98]
+  no_decay: ["bias", "layer_norm"]
+
+scheduler_cfg:
+  # name: myle
+  name: poly
+  warmup_steps: 100
+  lr_end: 1.0e-7
+  lr_pow: 1.0
+
+trainer_cfg:
+  num_nodes: 1
+  max_epochs: 20
+  accumulate_grad_batches: 1
+  gradient_clip_val: 1.0
+  precision: '16-mixed'
+  log_every_n_steps: 10
+  val_check_interval: null
+
+ckpt_cfg:
+  dirpath: /path/to/ckpt
+  monitor: val_loss
+  mode: min
+  filename: "ckpt-{epoch:02d}-{step:02d}-{val_loss:.2f}"
+
+deepspeed_cfg:
+  stage: 2
+  offload_optimizer: true
+  loss_scale: 0
+  min_loss_scale: 0.01
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

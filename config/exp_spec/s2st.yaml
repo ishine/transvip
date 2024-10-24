@@ -1,0 +1,108 @@
+train_name: s2st_train
+train_id: '00'
+mode: restart
+use_deepspeed: true
+seed: 44
+val_first: false
+
+module_cfg:
+  name: s2st
+
+model_cfg:
+  model_name: medium
+  model_path: null
+  tokenizer_path: null
+  num_new_tokens: 1025
+  use_length_control: true
+  codec_path: null
+
+
+train_dataset_cfg:
+  s2st:
+    - name: cvss
+      records_path: null
+      src_audio_root: null
+      tgt_audio_root: null
+      language: fr
+  # [Optional] Add more datasets
+  #   - name: seamless
+  #     records_path: null
+  #     audio_root: null
+  #     src_lang: fr
+  #     tgt_lang: en
+  # mt:
+  #   paths:
+  #     - null # path to huggingface translation dataset
+  # asr:
+  #   - records_path: null
+  #     audio_root: null
+  #     language: fr
+  #   - records_path: null
+  #     audio_root: null
+  #     language: en
+
+val_dataset_cfg:
+  - name: cvss
+    records_path: null
+    src_audio_root: null
+    tgt_audio_root: null
+    language: fr
+
+
+loader_cfg:
+  batch_size: 1
+  val_batch_size: 2
+  test_batch_size: 1
+  num_worker: 2
+
+
+optim_cfg:
+  learning_rate: 2.0e-5
+  weight_decay: 0.1
+  adam_epsilon: 1.0e-6
+  adam_betas: [0.9, 0.98]
+  no_decay: ["bias", "layer_norm"]
+
+scheduler_cfg:
+  name: poly
+  warmup_steps: 10
+  lr_end: 1.0e-7
+  lr_pow: 1.0
+
+trainer_cfg:
+  num_nodes: 1
+  # max_epochs: 3
+  max_steps: 300000
+  num_sanity_val_steps: 1
+  accumulate_grad_batches: 1
+  gradient_clip_val: 1.0
+  precision: '16-mixed'
+  log_every_n_steps: 1
+  val_check_interval: 500
+
+ckpt_cfg:
+  dirpath: /data/ckpt
+  monitor: val_loss
+  mode: min
+  filename: "ckpt-{epoch:02d}-{val_loss:.2f}"
+
+deepspeed_cfg:
+  stage: 0
+  offload_optimizer: false
+  loss_scale: 0
+  min_loss_scale: 0.01
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

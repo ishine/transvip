@@ -1,0 +1,113 @@
+train_name: codec_test
+train_id: t16
+mode: resume
+use_deepspeed: true
+
+seed: 108
+init_model_path: /data/pretrained/speechtokenizer
+
+module_cfg:
+  name: sascodec
+
+model_cfg:
+  semantic_path: null
+  sample_rate: 16000
+  generator:
+    n_filters: 64
+    strides: [8,5,4,2]
+    dimension: 1024
+    semantic_dimension: 1024
+    lstm_layers: 2
+    residual_kernel_size: 3
+    dilation_base: 2
+    n_residual_layers: 1
+    n_codebooks: 24
+    codebook_size: 1024
+    codebook_dim: 8
+    quantizer_dropout: 0.5
+    activation: ELU
+    bidirectional: True
+    n_semantic_layers: 6
+    sample_rate: 16000
+  discriminator:
+    sample_rate: 16000
+    rates: []
+    periods: [2, 3, 5, 7, 11]
+    fft_sizes: [2048, 1024, 512]
+    bands:
+    - [0.0, 0.1]
+    - [0.1, 0.25]
+    - [0.25, 0.5]
+    - [0.5, 0.75]
+    - [0.75, 1.0]
+  losses:
+    mel:
+      n_mels: [5, 10, 20, 40, 80, 160, 320]
+      window_lengths: [32, 64, 128, 256, 512, 1024, 2048]
+      mel_fmin: [0, 0, 0, 0, 0, 0, 0]
+      mel_fmax: [null, null, null, null, null, null, null]
+      pow: 1.0
+      clamp_eps: 1.0e-5
+      mag_weight: 0.0
+    stft:
+      window_lengths: [2048, 512]
+    weights:
+      mel/loss: 15.0
+      mel/loss_zero: 15.0
+      adv/feat_loss: 2.0
+      adv/gen_loss: 1.0
+      vq/commit_loss: 0.25
+      vq/codebook_loss: 1.0
+      semantic/distill_loss: 15.0
+
+train_dataset_cfg:
+  audio_dir: null
+
+val_dataset_cfg:
+  audio_dir: null
+
+loader_cfg:
+  batch_size: 20
+  val_batch_size: 20
+  num_worker: 8
+
+optim_cfg:
+  learning_rate: 0.00005
+  adam_betas: [0.8, 0.99]
+  decay_gamma: 0.999996
+
+trainer_cfg:
+  num_nodes: 1
+  max_epochs: 30
+  accumulate_grad_batches: 1
+  precision: '32'
+  log_every_n_steps: 1
+  val_check_interval: 10000
+
+ckpt_cfg:
+  dirpath: /data/ckpt
+  monitor: val/loss
+  mode: min
+  filename: "ckpt-{epoch:02d}-{step:02d}-{val/loss:.3f}"
+
+deepspeed_cfg:
+  stage: 0
+  offload_optimizer: false
+  loss_scale: 0
+  min_loss_scale: 0.01
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
