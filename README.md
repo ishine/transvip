@@ -34,7 +34,7 @@ pip install git+https://github.com/descriptinc/audiotools
 pip install -r requirements.txt
 ```
 
-You may also need a SASC checkpoint for data preparation and model training. Refer to [link](https://github.com/nethermanpro/sascodec) for installation and checkpoint. A pretrained SeamlessM4T model and the corresponding tokenizer is required. It is available at [here](https://github.com/facebookresearch/seamless_communication).
+You may also need a SASCodec checkpoint for data preparation and model training. Refer to [link](https://github.com/nethermanpro/sascodec) for installation and checkpoint. A pretrained SeamlessM4T model and the corresponding tokenizer is required. It is available at [here](https://github.com/facebookresearch/seamless_communication).
 
 ## Prepare Data
 
