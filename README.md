@@ -83,19 +83,19 @@ The training configuration is specified in the yaml file under `config/exp_spec`
 For training the AR model, it supports training with multiple datasets including ASR, MT and S2ST. The defualt model is based on the SeamlessM4T medium model. So you may load a pretrained model from the SeamlessM4T model.
 
 ```bash
-python run.py -c s2st.yaml 
+python train.py -c s2st.yaml 
 ```
 
 For training the NAR model, similarily you need to specify the path to the dataset and the codec model.
 
 ```bash
-python run.py -c nar.yaml
+python train.py -c nar.yaml
 ```
 
 If you want to train or finetune the SAScodec model, you can specify the path in `config/exp_spec/sascodec.yaml`. Optionally you can provide the path a semantic encoder to perform semantic distillation. By default it is a MMS-300M model.
 
 ```bash
-python run.py -c sascodec.yaml
+python train.py -c sascodec.yaml
 ```
 
 ## Test samples
